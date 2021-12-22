@@ -1,0 +1,25 @@
+- [ ] Enter a website
+- [ ] Do a BFS to a set depth (default is 5, configurable to go deeper)
+- [ ] Save a map with (url, status) of all crawled websites
+- [ ] Save a map of "must fix" metrics (METRIC, [urls]) for the following metrics:
+    - 5XX
+    - 4XX
+    - 302
+    - page_title_missing
+    - h1_missing
+    - h1_multiple
+    - canonical_missing
+- [ ] Save a map of "should fix" metrics:
+    - 3XX (not 302)
+    - page_title_duplicate
+    - page_title_repeats_h1
+    - h1_duplicate
+    - meta_description_missing
+    - alt_text_missing
+    - url_uppercase_and_lowercase
+    - url_with_and_without_slash
+    - no_follow_missing
+    - no_index_inappropriate
+- [ ] Print all must fix metrics
+- [ ] Print all should fix metrics
+- [ ] Save all in firebase
