@@ -1,14 +1,20 @@
-- [ ] Enter a website
-- [ ] Do a BFS to a set depth (default is 5, configurable to go deeper)
-- [ ] Save a map with (url, status) of all crawled websites
-- [ ] Save a map of "must fix" metrics (METRIC, [urls]) for the following metrics:
-    - 5XX
-    - 4XX
-    - 302
+- [x] Do a BFS to a set depth (default is 5, configurable to go deeper)
+- [x] Save a map (visited) with (url, status) of all crawled websites
+- [x] Save a map of "must fix" metrics (METRIC, [urls]) for the following metrics:
+    - 5XX (need from)
+    - 4XX (need from)
+    - 302 (need from)
     - page_title_missing
     - h1_missing
     - h1_multiple
     - canonical_missing
+- [x] Print all must fix metrics
+- [x] Save all in firebase
+
+## Later
+- [ ] Chart for each issue
+- [ ] Crawl sitemap.xml
+- [ ] Enter a website
 - [ ] Save a map of "should fix" metrics:
     - 3XX (not 302)
     - page_title_duplicate
@@ -20,6 +26,7 @@
     - url_with_and_without_slash
     - no_follow_missing
     - no_index_inappropriate
-- [ ] Print all must fix metrics
 - [ ] Print all should fix metrics
-- [ ] Save all in firebase
+- [ ] Check core web vitals
+- [ ] Check to make sure there's an analytics script present
+- [ ] Check for metadata specific to sharing (image, text, twitter:alt, etc.)
