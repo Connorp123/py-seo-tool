@@ -15,11 +15,11 @@ from firebase_admin import db
 from datetime import datetime
 
 # Constants
-MAX_DEPTH = 5
+MAX_DEPTH = 8
 MAX_WAIT_TIME = 0
-BASE_URL = 'https://connorpeace.com'
-VALID_URL_REGEX = re.compile('(.*connorpeace\.com.*)|(.*\.html)')
-
+DOMAIN = 'gennev'
+BASE_URL = f'https://{DOMAIN}.com'
+VALID_URL_REGEX = re.compile('(.*gennev\.com.*)|(.*\.html)')
 
 def wait():
     x = randint(0, MAX_WAIT_TIME)
@@ -29,6 +29,7 @@ def wait():
 def bfs(start_url, visited, must_fix):
     # Set up regex
     http_regex = re.compile('http.*')
+    starting_slash_regex = re.compile('^\/')
 
     # Add the root
     fringe = [(start_url, 0,
@@ -92,17 +93,25 @@ def bfs(start_url, visited, must_fix):
                 # Add all found links to fringe
                 all_links = soup.find_all('a')
                 for a in all_links:
-                    href = a['href']
 
-                    # Fix URL if needed
-                    if not http_regex.match(href):
-                        href = BASE_URL + '/' + href
+                    # Make sure the a tag has an href
+                    if a.has_attr('href'):
 
-                    fringe.append((href, current[1] + 1, current[0]))
+                        href = a['href']
+
+                        # Fix URL if needed
+                        if not http_regex.match(href):
+
+                            # Check for starting slash
+                            if not starting_slash_regex.match(href):
+                                href = BASE_URL + '/' + href
+                            else:
+                                href = BASE_URL + href
+
+                        fringe.append((href, current[1] + 1, current[0]))
 
             else:
-                print("Invalid response code:", response_code)
-
+                print("Not crawling the url", current[0])
 
 if __name__ == '__main__':
     # Initialize all variables
@@ -125,13 +134,23 @@ if __name__ == '__main__':
     cred = credentials.Certificate("serviceAccountKey.json")
     firebase_admin.initialize_app(cred)
     time_string = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    ref = db.reference(f'/{time_string}',
+    ref = db.reference(f'/{DOMAIN}/{time_string}',
                        url="https://seo-tool-cp-default-rtdb.firebaseio.com/")
 
     ############################################################################
     # Crawl the site
     ############################################################################
     bfs(BASE_URL, visited, must_fix)
+
+    must_fix['stats'] = {
+        '5xx': len(must_fix['5xx']),
+        '4xx': len(must_fix['4xx']),
+        '302': len(must_fix['302']),
+        'page_title_missing': len(must_fix['page_title_missing']),
+        'h1_missing': len(must_fix['h1_missing']),
+        'h1_multiple': len(must_fix['h1_multiple']),
+        'canonical_missing': len(must_fix['canonical_missing'])
+    }
 
     ############################################################################
     # Output the results
@@ -147,16 +166,6 @@ if __name__ == '__main__':
     ############################################################################
     # Save the results to Firebase
     ############################################################################
-    must_fix['stats'] = {
-        '5xx': len(must_fix['5xx']),
-        '4xx': len(must_fix['4xx']),
-        '302': len(must_fix['302']),
-        'page_title_missing': len(must_fix['page_title_missing']),
-        'h1_missing': len(must_fix['h1_missing']),
-        'h1_multiple': len(must_fix['h1_multiple']),
-        'canonical_missing': len(must_fix['canonical_missing'])
-    }
-
     fire_object = {
         'visited': list(visited.items()),
         'must_fix': must_fix,
@@ -164,6 +173,3 @@ if __name__ == '__main__':
 
     ref.set(fire_object)
     print("Saved visited to firebase.")
-
-    # ref_must_fix.set(must_fix)
-    # print("Saved must_fix to firebase.")

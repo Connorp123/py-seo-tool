@@ -12,9 +12,9 @@
 - [x] Save all in firebase
 
 ## Later
-- [ ] Chart for each issue
+- [ ] Add progress bar to console instead of 'Visiting: '. Log 'Visiting: ' instead
 - [ ] Crawl sitemap.xml
-- [ ] Enter a website
+- [ ] Add file similar to .gitignore that will ignore all URL's of given patterns
 - [ ] Save a map of "should fix" metrics:
     - 3XX (not 302)
     - page_title_duplicate
@@ -26,7 +26,8 @@
     - url_with_and_without_slash
     - no_follow_missing
     - no_index_inappropriate
-- [ ] Print all should fix metrics
 - [ ] Check core web vitals
 - [ ] Check to make sure there's an analytics script present
 - [ ] Check for metadata specific to sharing (image, text, twitter:alt, etc.)
+- [ ] Chart for each issue
+- [ ] Enter a website
